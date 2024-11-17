@@ -2,12 +2,10 @@ import { memo, useEffect, useRef, useState } from "react";
 
 function Circle({
   value,
-  handleStarting,
   max,
   handleEnd,
 }: {
   value: number;
-  handleStarting: Function;
   handleEnd: Function;
   max: number;
 }) {
@@ -17,8 +15,6 @@ function Circle({
   const [opacity, setOpacity] = useState(1);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isFinished, setIsFinished] = useState(false);
-
-  console.log(opacity);
 
   useEffect(() => {
     if (isFinished) {
@@ -34,9 +30,6 @@ function Circle({
   const handleClick = () => {
     if (circleRef.current) {
       circleRef.current.style.backgroundColor = "red";
-    }
-    if (value === 1) {
-      handleStarting();
     }
     setStarting(true);
   };
@@ -87,7 +80,7 @@ function Circle({
       {starting && (
         <span className="text-[#fff] mt-1">
           {time.seconds}:
-          {time.miliSeconds < 10 ? `0${time.miliSeconds}` : time.miliSeconds}s
+          {time.miliSeconds}
         </span>
       )}
     </div>

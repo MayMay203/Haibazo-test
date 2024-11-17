@@ -3,7 +3,7 @@ import Circle from "./Component/Circle";
 
 function App() {
   const [title, setTitle] = useState<string>("LET'S PLAY");
-  const [number, setNumber] = useState<number>(0);
+  const [number, setNumber] = useState<string>("");
   const [timeUp, setTimeUp] = useState({ seconds: 0, milliseconds: 0 });
   const [status, setStatus] = useState<string>("ON");
   const [starting, setStarting] = useState(false);
@@ -16,7 +16,6 @@ function App() {
   const handleEnd = useCallback(() => {
     setStarting(false);
     setTitle("ALL CLEARED");
-    setIsPlay(false)
   }, []);
 
   useEffect(() => {
@@ -51,11 +50,21 @@ function App() {
         <div className="flex gap-x-4 items-center mb-3">
           <label>Points: </label>
           <input
+            value={number}
+            onChange={(e) => {
+              setNumber(e.target.value);
+            }}
             type="number"
-            min={0}
-            value={number === undefined ? "" : number}
-            onChange={(e) => setNumber(Number(e.target.value))}
-            className="w-[200px] p-1 px-2 border-[#ccc] border-[1px] rounded-[4px]"
+            className="w-[200px] text-[18px] outline-none border border-gray-300 rounded-[8px] p-2 no-spinner"
+            onKeyDown={(e) => {
+              if (
+                !/[0-9]/.test(e.key) &&
+                e.key !== "Backspace" &&
+                e.key !== "Tab"
+              ) {
+                e.preventDefault();
+              }
+            }}
           />
         </div>
         <div className="flex gap-x-4 mb-5">
@@ -63,17 +72,15 @@ function App() {
           <span>{timeUp.seconds + ":" + timeUp.milliseconds + "s"}</span>
         </div>
         <div className="flex gap-x-4">
-          {title !== "LET'S PLAY" && (
-            <button className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]">
-              Restart
-            </button>
-          )}
-          {!isPlay && title !== 'ALL CLEARED' && (
+          {!isPlay && title !== "ALL CLEARED" && (
             <button
-              onClick={() => setIsPlay(true)}
+              onClick={() => {
+                setIsPlay(true);
+                handleStarting();
+              }}
               className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]"
-              disabled={number === 0}
-              style={number === 0 ? { opacity: 0.5 } : {}}
+              disabled={number === "0" || number === ""}
+              style={number === "" || number === "0" ? { opacity: 0.5 } : {}}
             >
               Play
             </button>
@@ -83,7 +90,7 @@ function App() {
               Restart
             </button>
           )}
-          {isPlay && (
+          {isPlay && title !== "ALL CLEARED" && (
             <button className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]">
               Auto play <span>{status}</span>
             </button>
@@ -94,13 +101,13 @@ function App() {
           style={{ border: "1px solid #ccc" }}
         >
           {isPlay &&
-            Array.from({ length: number }).map((_, index) => (
+            title === "LET'S PLAY" &&
+            Array.from({ length: Number(number) }).map((_, index) => (
               <Circle
                 key={index + 1}
                 value={index + 1}
-                handleStarting={handleStarting}
                 handleEnd={handleEnd}
-                max={number}
+                max={Number(number)}
               />
             ))}
         </div>
