@@ -7,6 +7,7 @@ function Circle({
   currentNumber,
   handleNumberChange,
   stopAll,
+  setStopAll,
   restart,
   autoPlay,
 }: {
@@ -26,6 +27,10 @@ function Circle({
   const [opacity, setOpacity] = useState(1);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isFinished, setIsFinished] = useState(false);
+
+  useEffect(() => {
+    setIsFinished(false);
+  }, [restart]);
 
   useEffect(() => {
     if (autoPlay && value === currentNumber + 1) {
@@ -59,13 +64,13 @@ function Circle({
 
   const handleClick = () => {
     if (circleRef.current) {
-      circleRef.current.style.zIndex = "1000";
       circleRef.current.style.backgroundColor = "red";
     }
     if (!starting) {
       if (currentNumber + 1 !== value) {
-        setStarting(false);
         handleEnd("GAME OVER");
+        setStopAll(true);
+        setStarting(false);
         return;
       }
       handleNumberChange(value);
@@ -85,7 +90,7 @@ function Circle({
   useEffect(() => {
     if (!starting || stopAll) return;
     const timerId = setInterval(() => {
-      setOpacity((prev) => prev - 1.0 / 10);
+      setOpacity((prev) => prev - 1.0 / 30);
       setTime((prevTime) => {
         if (prevTime.miliSeconds === 1 && prevTime.seconds === 0) {
           clearInterval(timerId);
@@ -102,7 +107,7 @@ function Circle({
     }, 100);
 
     return () => clearInterval(timerId);
-  }, [starting, restart, stopAll, autoPlay]);
+  }, [starting, stopAll, autoPlay]);
 
   return (
     <div
@@ -110,13 +115,13 @@ function Circle({
       onClick={handleClick}
       ref={circleRef}
       style={{
-        cursor: 'pointer',
-        transition: 'opacity .3s ease',
+        cursor: "pointer",
+        transition: "opacity .3s ease",
         top: `${position.top}px`,
         left: `${position.left}px`,
         border: "1px solid red",
         opacity: opacity,
-        pointerEvents: opacity < 0.05 ? "none" : "auto",
+        pointerEvents: opacity < 0.03 ? "none" : "auto",
       }}
     >
       {value}
