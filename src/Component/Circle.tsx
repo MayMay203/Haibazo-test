@@ -34,9 +34,6 @@ function Circle({
 
   useEffect(() => {
     if (autoPlay && value === currentNumber + 1) {
-      if (circleRef.current) {
-        circleRef.current.style.zIndex = "1000";
-      }
       setTimeout(() => {
         circleRef.current?.click();
         handleNumberChange(value);
@@ -64,6 +61,7 @@ function Circle({
 
   const handleClick = () => {
     if (circleRef.current) {
+      circleRef.current.style.zIndex = "1000";
       circleRef.current.style.backgroundColor = "red";
     }
     if (!starting) {
