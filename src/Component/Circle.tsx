@@ -8,6 +8,7 @@ function Circle({
   handleNumberChange,
   stopAll,
   setStopAll,
+  restart,
 }: {
   value: number;
   handleEnd: Function;
@@ -16,6 +17,7 @@ function Circle({
   handleNumberChange: Function;
   stopAll: boolean;
   setStopAll: Function;
+  restart: boolean;
 }) {
   const circleRef = useRef<HTMLDivElement | null>(null);
   const [starting, setStarting] = useState(false);
@@ -23,6 +25,15 @@ function Circle({
   const [opacity, setOpacity] = useState(1);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isFinished, setIsFinished] = useState(false);
+
+  useEffect(() => {
+    if (circleRef.current) {
+      circleRef.current.style.backgroundColor = "white";
+    }
+    setOpacity(1);
+    setStarting(false);
+    setTime({ seconds: 1, miliSeconds: 0 });
+  }, [restart]);
 
   useEffect(() => {
     if (isFinished) {
@@ -36,9 +47,9 @@ function Circle({
   const getRandomPosition = () => Math.floor(Math.random() * 90);
 
   const handleClick = () => {
-     if (circleRef.current) {
-       circleRef.current.style.backgroundColor = "red";
-     }
+    if (circleRef.current) {
+      circleRef.current.style.backgroundColor = "red";
+    }
     if (!starting) {
       if (currentNumber + 1 !== value) {
         handleEnd("GAME OVER");

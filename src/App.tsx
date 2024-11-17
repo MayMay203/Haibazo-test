@@ -10,6 +10,7 @@ function App() {
   const [isPlay, setIsPlay] = useState(false);
   const [currentNumber, setCurrentNumber] = useState<number>(0);
   const [stopAll, setStopAll] = useState(false);
+  const [restart, setRestart] = useState(false);
 
   const handleStarting = useCallback(() => {
     setStarting(true);
@@ -99,7 +100,16 @@ function App() {
             </button>
           )}
           {isPlay && (
-            <button className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]">
+            <button
+              className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]"
+              onClick={() => {
+                setTimeUp({ seconds: 0, milliseconds: 0 });
+                setRestart(prev => !prev);
+                handleEnd("LET'S PLAY");
+                handleStarting();
+                setCurrentNumber(0);
+              }}
+            >
               Restart
             </button>
           )}
@@ -110,7 +120,7 @@ function App() {
           )}
         </div>
         <div
-          className="mt-5 w-[900px] h-[500px] bg-[#fafaed] relative"
+          className="mt-5 w-[900px] h-[500px] relative"
           style={{ border: "1px solid #ccc" }}
         >
           {isPlay &&
@@ -123,7 +133,8 @@ function App() {
                 handleEnd={handleEnd}
                 max={Number(number)}
                 stopAll={stopAll}
-                setStopAll={()=>setStopAll(true)}
+                setStopAll={() => setStopAll(true)}
+                restart={restart}
               />
             ))}
         </div>
