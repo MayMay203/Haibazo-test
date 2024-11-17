@@ -7,7 +7,6 @@ function Circle({
   currentNumber,
   handleNumberChange,
   stopAll,
-  setStopAll,
   restart,
   autoPlay,
 }: {
@@ -60,13 +59,13 @@ function Circle({
 
   const handleClick = () => {
     if (circleRef.current) {
+      circleRef.current.style.zIndex = "1000";
       circleRef.current.style.backgroundColor = "red";
     }
     if (!starting) {
       if (currentNumber + 1 !== value) {
-        handleEnd("GAME OVER");
-        setStopAll(true);
         setStarting(false);
+        handleEnd("GAME OVER");
         return;
       }
       handleNumberChange(value);
@@ -103,7 +102,7 @@ function Circle({
     }, 100);
 
     return () => clearInterval(timerId);
-  }, [starting, stopAll]);
+  }, [starting, restart, stopAll, autoPlay]);
 
   return (
     <div
@@ -111,6 +110,7 @@ function Circle({
       onClick={handleClick}
       ref={circleRef}
       style={{
+        cursor: 'pointer',
         transition: 'opacity .3s ease',
         top: `${position.top}px`,
         left: `${position.left}px`,

@@ -24,6 +24,7 @@ function App() {
   const handleEnd = useCallback((title: string) => {
     setStarting(false);
     setTitle(title);
+    setAutoPlay(false);
   }, []);
 
   useEffect(() => {
@@ -71,6 +72,9 @@ function App() {
           <input
             value={number}
             onChange={(e) => {
+              setIsPlay(false);
+              setTimeUp({ seconds: 0, milliseconds: 0 });
+              handleEnd("LET'S PLAY");
               setNumber(e.target.value);
             }}
             type="number"
@@ -86,14 +90,17 @@ function App() {
             }}
           />
         </div>
-        <div className="flex gap-x-4 mb-5">
+        <div className="flex gap-x-6 mb-5">
           <label>Time:</label>
-          <span>{timeUp.seconds + ":" + timeUp.milliseconds + "s"}</span>
+          <span className="font-bold">
+            {timeUp.seconds + "." + timeUp.milliseconds + "s"}
+          </span>
         </div>
         <div className="flex gap-x-4">
           {!isPlay && title !== "ALL CLEARED" && (
             <button
               onClick={() => {
+                setCurrentNumber(0);
                 setIsPlay(true);
                 handleStarting();
               }}
@@ -109,10 +116,10 @@ function App() {
               className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]"
               onClick={() => {
                 setTimeUp({ seconds: 0, milliseconds: 0 });
+                setCurrentNumber(0);
                 setRestart((prev) => !prev);
                 handleEnd("LET'S PLAY");
                 handleStarting();
-                setCurrentNumber(0);
               }}
             >
               Restart
