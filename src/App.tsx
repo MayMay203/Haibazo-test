@@ -71,6 +71,9 @@ function App() {
           <input
             value={number}
             onChange={(e) => {
+              setIsPlay(false);
+              setTimeUp({ seconds: 0, milliseconds: 0 });
+              handleEnd("LET'S PLAY");
               setNumber(e.target.value);
             }}
             type="number"
@@ -88,12 +91,17 @@ function App() {
         </div>
         <div className="flex gap-x-6 mb-5">
           <label>Time:</label>
-          <span className="font-bold">{timeUp.seconds + "." + timeUp.milliseconds+'s'}</span>
+          <span className="font-bold">
+            {timeUp.seconds + "." + timeUp.milliseconds + "s"}
+          </span>
         </div>
         <div className="flex gap-x-4">
           {!isPlay && title !== "ALL CLEARED" && (
             <button
               onClick={() => {
+                setAutoPlay(false);
+                setStatus("ON");
+                setCurrentNumber(0);
                 setIsPlay(true);
                 handleStarting();
               }}
@@ -110,8 +118,8 @@ function App() {
               onClick={() => {
                 setTimeUp({ seconds: 0, milliseconds: 0 });
                 setRestart((prev) => !prev);
-                setAutoPlay(false)
-                setStatus('ON')
+                setAutoPlay(false);
+                setStatus("ON");
                 setStopAll(false);
                 handleEnd("LET'S PLAY");
                 handleStarting();
