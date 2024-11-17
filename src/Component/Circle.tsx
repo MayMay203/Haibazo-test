@@ -23,13 +23,16 @@ function Circle({
 }) {
   const circleRef = useRef<HTMLDivElement | null>(null);
   const [starting, setStarting] = useState(false);
-  const [time, setTime] = useState({ seconds: 1, miliSeconds: 0 });
+  const [time, setTime] = useState({ seconds: 3, miliSeconds: 0 });
   const [opacity, setOpacity] = useState(1);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     if (autoPlay && value === currentNumber + 1) {
+      if (circleRef.current) {
+        circleRef.current.style.zIndex = "1000";
+      }
       setTimeout(() => {
         circleRef.current?.click();
         handleNumberChange(value);
@@ -43,7 +46,7 @@ function Circle({
     }
     setOpacity(1);
     setStarting(false);
-    setTime({ seconds: 1, miliSeconds: 0 });
+    setTime({ seconds: 3, miliSeconds: 0 });
   }, [restart]);
 
   useEffect(() => {
@@ -54,8 +57,6 @@ function Circle({
       setStarting(false);
     }
   }, [isFinished]);
-
-  const getRandomPosition = () => Math.floor(Math.random() * 90);
 
   const handleClick = () => {
     if (circleRef.current) {
@@ -74,9 +75,11 @@ function Circle({
   };
 
   useEffect(() => {
+    const adjustedTop = Math.floor(Math.random() * (500 - 50));
+    const adjustedLeft = Math.floor(Math.random() * (900 - 50));
     setPosition({
-      top: getRandomPosition(),
-      left: getRandomPosition(),
+      top: adjustedTop,
+      left: adjustedLeft,
     });
   }, []);
 
@@ -108,8 +111,9 @@ function Circle({
       onClick={handleClick}
       ref={circleRef}
       style={{
-        top: `${position.top}%`,
-        left: `${position.left}%`,
+        transition: 'opacity .3s ease',
+        top: `${position.top}px`,
+        left: `${position.left}px`,
         border: "1px solid red",
         opacity: opacity,
         pointerEvents: opacity < 0.05 ? "none" : "auto",
