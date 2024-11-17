@@ -4,10 +4,18 @@ function Circle({
   value,
   max,
   handleEnd,
+  currentNumber,
+  handleNumberChange,
+  stopAll,
+  setStopAll,
 }: {
   value: number;
   handleEnd: Function;
   max: number;
+  currentNumber: number;
+  handleNumberChange: Function;
+  stopAll: boolean;
+  setStopAll: Function;
 }) {
   const circleRef = useRef<HTMLDivElement | null>(null);
   const [starting, setStarting] = useState(false);
@@ -19,7 +27,7 @@ function Circle({
   useEffect(() => {
     if (isFinished) {
       if (value === max) {
-        handleEnd();
+        handleEnd("ALL CLEARED");
       }
       setStarting(false);
     }
@@ -28,10 +36,19 @@ function Circle({
   const getRandomPosition = () => Math.floor(Math.random() * 90);
 
   const handleClick = () => {
-    if (circleRef.current) {
-      circleRef.current.style.backgroundColor = "red";
+     if (circleRef.current) {
+       circleRef.current.style.backgroundColor = "red";
+     }
+    if (!starting) {
+      if (currentNumber + 1 !== value) {
+        handleEnd("GAME OVER");
+        setStopAll(true);
+        setStarting(false);
+        return;
+      }
+      handleNumberChange(value);
+      setStarting(true);
     }
-    setStarting(true);
   };
 
   useEffect(() => {
@@ -42,7 +59,7 @@ function Circle({
   }, []);
 
   useEffect(() => {
-    if (!starting) return;
+    if (!starting || stopAll) return;
     const timerId = setInterval(() => {
       setOpacity((prev) => prev - 1.0 / 10);
       setTime((prevTime) => {
@@ -61,7 +78,7 @@ function Circle({
     }, 100);
 
     return () => clearInterval(timerId);
-  }, [starting]);
+  }, [starting, stopAll]);
 
   return (
     <div
@@ -79,8 +96,7 @@ function Circle({
       {value}
       {starting && (
         <span className="text-[#fff] mt-1">
-          {time.seconds}:
-          {time.miliSeconds}
+          {time.seconds}:{time.miliSeconds}
         </span>
       )}
     </div>

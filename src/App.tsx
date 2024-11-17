@@ -8,14 +8,20 @@ function App() {
   const [status, setStatus] = useState<string>("ON");
   const [starting, setStarting] = useState(false);
   const [isPlay, setIsPlay] = useState(false);
+  const [currentNumber, setCurrentNumber] = useState<number>(0);
+  const [stopAll, setStopAll] = useState(false);
 
   const handleStarting = useCallback(() => {
     setStarting(true);
   }, []);
 
-  const handleEnd = useCallback(() => {
+  const handleNumberChange = useCallback((value: number) => {
+    setCurrentNumber(value);
+  }, []);
+
+  const handleEnd = useCallback((title: string) => {
     setStarting(false);
-    setTitle("ALL CLEARED");
+    setTitle(title);
   }, []);
 
   useEffect(() => {
@@ -43,7 +49,14 @@ function App() {
       <div className="p-7">
         <h1
           className="text-[20px] font-bold mb-3"
-          style={{ color: title === "ALL CLEARED" ? "green" : "black" }}
+          style={{
+            color:
+              title === "ALL CLEARED"
+                ? "green"
+                : title === "GAME OVER"
+                ? "red"
+                : "black",
+          }}
         >
           {title}
         </h1>
@@ -90,7 +103,7 @@ function App() {
               Restart
             </button>
           )}
-          {isPlay && title !== "ALL CLEARED" && (
+          {isPlay && title === "LET'S PLAY" && (
             <button className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]">
               Auto play <span>{status}</span>
             </button>
@@ -101,13 +114,16 @@ function App() {
           style={{ border: "1px solid #ccc" }}
         >
           {isPlay &&
-            title === "LET'S PLAY" &&
             Array.from({ length: Number(number) }).map((_, index) => (
               <Circle
+                currentNumber={currentNumber}
+                handleNumberChange={handleNumberChange}
                 key={index + 1}
                 value={index + 1}
                 handleEnd={handleEnd}
                 max={Number(number)}
+                stopAll={stopAll}
+                setStopAll={()=>setStopAll(true)}
               />
             ))}
         </div>
