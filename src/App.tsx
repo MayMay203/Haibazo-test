@@ -1,8 +1,11 @@
+import Circle from "./Component/Circle"
+
 function App() {
   return (
-    <>
-      My App
-    </>
+    <div className="text-red-400">
+      hihi
+      <Circle/>
+    </div>
   )
 }
 
