@@ -9,6 +9,7 @@ function Circle({
   stopAll,
   setStopAll,
   restart,
+  autoPlay,
 }: {
   value: number;
   handleEnd: Function;
@@ -18,6 +19,7 @@ function Circle({
   stopAll: boolean;
   setStopAll: Function;
   restart: boolean;
+  autoPlay: boolean;
 }) {
   const circleRef = useRef<HTMLDivElement | null>(null);
   const [starting, setStarting] = useState(false);
@@ -25,6 +27,15 @@ function Circle({
   const [opacity, setOpacity] = useState(1);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isFinished, setIsFinished] = useState(false);
+
+  useEffect(() => {
+    if (autoPlay && value === currentNumber + 1) {
+      setTimeout(() => {
+        circleRef.current?.click();
+        handleNumberChange(value);
+      }, 600);
+    }
+  }, [autoPlay, currentNumber]);
 
   useEffect(() => {
     if (circleRef.current) {

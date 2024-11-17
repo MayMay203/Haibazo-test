@@ -11,6 +11,7 @@ function App() {
   const [currentNumber, setCurrentNumber] = useState<number>(0);
   const [stopAll, setStopAll] = useState(false);
   const [restart, setRestart] = useState(false);
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const handleStarting = useCallback(() => {
     setStarting(true);
@@ -45,6 +46,10 @@ function App() {
     };
   }, [starting]);
 
+  const handleAutoPlay = () => {
+    setAutoPlay((prev) => !prev);
+    setStatus(autoPlay ? "ON" : "OFF");
+  };
   return (
     <div className="flex justify-center">
       <div className="p-7">
@@ -104,7 +109,7 @@ function App() {
               className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]"
               onClick={() => {
                 setTimeUp({ seconds: 0, milliseconds: 0 });
-                setRestart(prev => !prev);
+                setRestart((prev) => !prev);
                 handleEnd("LET'S PLAY");
                 handleStarting();
                 setCurrentNumber(0);
@@ -114,7 +119,10 @@ function App() {
             </button>
           )}
           {isPlay && title === "LET'S PLAY" && (
-            <button className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]">
+            <button
+              className="p-2 px-4 border-[green] border-[1px] rounded-[8px] text-[green]"
+              onClick={handleAutoPlay}
+            >
               Auto play <span>{status}</span>
             </button>
           )}
@@ -135,6 +143,7 @@ function App() {
                 stopAll={stopAll}
                 setStopAll={() => setStopAll(true)}
                 restart={restart}
+                autoPlay={autoPlay}
               />
             ))}
         </div>
